@@ -1,26 +1,137 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --p3-bg-dark: #030712;
+    --p3-bg-navy: #060e22;
+    --p3-bg-card: #0a142e;
+    --p3-cyan: #00d2ff;
+    --p3-cyan-glow: #00f0ff;
+    --p3-blue-dark: #004488;
+    --p3-yellow: #ffea00;
+    --p3-crimson: #ff2a5f;
+    --p3-white: #f0f8ff;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+    background-color: #030712;
+  }
+
+  body {
+    background-color: #030712;
+    color: #f0f8ff;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: #00d2ff;
+    color: #030712;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #030712;
+}
+::-webkit-scrollbar-thumb {
+  background: #004488;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00d2ff;
+}
+
+/* Persona 3 Angled Geometric Cuts */
+.p3-cut-corner {
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+}
+
+.p3-cut-corner-lg {
+  clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 28px 100%, 0 calc(100% - 28px));
+}
+
+.p3-skew-ribbon {
+  transform: skewX(-12deg);
+}
+
+.p3-unskew {
+  transform: skewX(12deg);
+}
+
+.p3-diagonal-border {
+  clip-path: polygon(14px 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
+}
+
+/* Persona 3 Water & Moonlit Ambient Grids */
+.p3-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 210, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
+}
+
+.p3-scanlines {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 3px, 6px 100%;
+}
+
+.p3-glow-cyan {
+  box-shadow: 0 0 35px -5px rgba(0, 210, 255, 0.35);
+}
+
+.p3-glow-cyan-subtle {
+  box-shadow: 0 0 20px -3px rgba(0, 210, 255, 0.2);
+}
+
+.p3-text-shadow {
+  text-shadow: 0 0 12px rgba(0, 210, 255, 0.6);
+}
+
+/* Persona 3 Animated Water Waves & Ribbons */
+@keyframes p3-water-flow {
+  0% { transform: translateY(0) scaleY(1); }
+  50% { transform: translateY(-8px) scaleY(1.05); }
+  100% { transform: translateY(0) scaleY(1); }
+}
+
+.animate-p3-water {
+  animation: p3-water-flow 6s ease-in-out infinite;
+}
+
+@keyframes p3-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.p3-shimmer-btn {
+  background: linear-gradient(90deg, #00d2ff 0%, #ffffff 50%, #00d2ff 100%);
+  background-size: 200% 100%;
+  animation: p3-shimmer 3.5s infinite linear;
+}
+
+/* Prefers-reduced-motion accessibility support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
