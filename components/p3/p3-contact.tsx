@@ -91,7 +91,7 @@ export function P3Contact({ onOpenResume }: P3ContactProps) {
             CONNECT WITH RUSHIL
           </h2>
           <p className="text-xs sm:text-sm font-mono text-slate-400 mt-2 leading-relaxed">
-            Actively interviewing for entry-level Software Engineering positions &amp; discussing US MS/MEng programs.
+            Actively interviewing for entry-level Software Engineering positions &amp.
           </p>
         </div>
 
