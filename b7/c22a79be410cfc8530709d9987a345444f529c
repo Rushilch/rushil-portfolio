@@ -1,0 +1,15 @@
+README.md
+  h_a7a39243946b44 1,3-194,198,200-201,203-213,219-257,259-362,364,366,368,370,372,374,376,378,380,382
+  h_a7a39243946b44 2,199,202,258,363
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "b7c22a79be410cfc8530709d9987a345444f529c",
+  "prompts": {},
+  "humans": {
+    "h_a7a39243946b44": {
+      "author": "Rushil <rushilchilakamarri@gmail.com>"
+    }
+  }
+}
