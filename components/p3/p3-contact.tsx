@@ -51,7 +51,11 @@ export function P3Contact({ onOpenResume }: P3ContactProps) {
             Connect with Me
           </h2>
           <p className="text-xs sm:text-sm font-mono text-slate-400 mt-2 leading-relaxed">
+<<<<<<< HEAD
             I am actively looking for Entry-Level Software Engineering and Applied Machine Learning positions. Click below to email me directly or copy my contact details.
+=======
+            Actively interviewing for entry-level Software Engineering positions.
+>>>>>>> 39d6f7d330c0639e289c08d577b00fed9f81d856
           </p>
         </div>
 
