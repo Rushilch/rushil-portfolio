@@ -1,22 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+
+const INITIAL_PARTICLES = Array.from({ length: 18 }).map((_, i) => ({
+  id: i,
+  left: (i * 37) % 100,
+  top: (i * 53) % 100,
+  size: (i % 6) + 4,
+  delay: (i % 5) * 0.8,
+  duration: (i % 4) * 2 + 6,
+}));
 
 export function P3MoonParticles() {
-  const [particles, setParticles] = useState<{ id: number; left: number; top: number; size: number; delay: number; duration: number }[]>([]);
-
-  useEffect(() => {
-    // Generate floating moonlit diamond particles
-    const items = Array.from({ length: 18 }).map((_, i) => ({
-      id: i,
-      left: Math.floor(Math.random() * 100),
-      top: Math.floor(Math.random() * 100),
-      size: Math.floor(Math.random() * 8) + 4,
-      delay: Math.random() * 5,
-      duration: Math.random() * 8 + 6,
-    }));
-    setParticles(items);
-  }, []);
+  const [particles] = useState(INITIAL_PARTICLES);
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">

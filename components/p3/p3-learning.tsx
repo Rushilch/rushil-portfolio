@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Sparkles, Server, Shield, Layers, CheckCircle2, ChevronRight } from "lucide-react";
+import { Sparkles, Server, Shield, Layers, CheckCircle2, ChevronRight, Compass } from "lucide-react";
 import { CURRENTLY_LEARNING } from "@/data/portfolio-data";
 import { sound } from "@/lib/sound";
 
@@ -11,18 +11,18 @@ export function P3Learning() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-2 bg-[#6366f1] text-white px-3 py-0.5 text-xs font-mono font-black uppercase transform skew-x-[-12deg] mb-2">
+          <div className="inline-flex items-center gap-2 bg-[#6366f1] text-white px-3 py-0.5 text-xs font-mono font-bold transform skew-x-[-12deg] mb-2">
             <span className="transform skew-x-[12deg] flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
-              [VELVET ROOM // FUSION &amp; DEEPENING ROADMAP]
+              <Compass className="w-3.5 h-3.5" />
+              Technical Systems Roadmap &bull; Active Focus
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#f0f8ff] tracking-tight uppercase font-sans">
-            ACTIVE SYSTEMS ROADMAP
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#f0f8ff] tracking-tight font-sans">
+            Systems Roadmap &amp; Growth
           </h2>
           <p className="text-xs sm:text-sm font-mono text-slate-400 mt-2 leading-relaxed">
-            Deliberate systems engineering roadmap. Transparently tracking advanced backend, async queuing, and cybersecurity competencies.
+            My deliberate systems engineering roadmap. Transparently tracking advanced backend architectures, async queuing, and cybersecurity competencies.
           </p>
         </div>
 
@@ -37,15 +37,15 @@ export function P3Learning() {
               <div>
                 {/* Meta Header */}
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="text-[10px] font-mono font-bold text-[#6366f1] bg-[#030712] px-2 py-0.5 border border-[#6366f1]/40 uppercase">
+                  <span className="text-[10px] font-mono font-medium text-[#6366f1] bg-[#030712] px-2 py-0.5 border border-[#6366f1]/40">
                     {item.category}
                   </span>
-                  <span className="text-[10px] font-mono font-bold bg-[#6366f1] text-white px-2 py-0.2 uppercase">
+                  <span className="text-[10px] font-mono font-bold bg-[#6366f1] text-white px-2 py-0.2">
                     {item.status}
                   </span>
                 </div>
 
-                <h3 className="text-lg font-black text-[#f0f8ff] mb-2 font-mono uppercase">
+                <h3 className="text-lg font-bold text-[#f0f8ff] mb-2 font-mono">
                   {item.topic}
                 </h3>
                 <p className="text-xs text-slate-300 leading-relaxed mb-5 font-sans">
@@ -54,8 +54,8 @@ export function P3Learning() {
 
                 {/* Focus Areas */}
                 <div className="space-y-2 mb-6">
-                  <div className="text-[10px] font-mono text-slate-500 uppercase tracking-wider font-bold">
-                    MILESTONES IN PROGRESS:
+                  <div className="text-[10px] font-mono text-slate-400 font-bold">
+                    Active Milestones:
                   </div>
                   <div className="space-y-1.5">
                     {item.focusAreas.map((area, i) => (
@@ -73,8 +73,8 @@ export function P3Learning() {
 
               {/* Resource Footer */}
               <div className="pt-4 border-t border-slate-800 flex items-center justify-between text-[10px] font-mono">
-                <span className="text-slate-500 uppercase">CORE REFERENCES:</span>
-                <span className="text-slate-400 truncate max-w-[65%] text-right">{item.keyResources}</span>
+                <span className="text-slate-400">Core References:</span>
+                <span className="text-slate-300 truncate max-w-[65%] text-right">{item.keyResources}</span>
               </div>
             </div>
           ))}

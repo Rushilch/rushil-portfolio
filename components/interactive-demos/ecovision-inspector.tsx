@@ -3,11 +3,18 @@
 import React, { useState } from "react";
 import { Info, BarChart3, Sliders, ShieldCheck, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { sound } from "@/lib/sound";
+import {
+  EnvironmentalFeatures,
+  BASELINE_RISK,
+  getShapAttributions,
+  computeTotalRisk,
+  classifyRiskLevel,
+} from "@/lib/ecovision-calc";
 
 export function EcovisionInspector() {
   const [activeTab, setActiveTab] = useState<"shap" | "lime">("shap");
   
-  const [features, setFeatures] = useState<Record<string, number>>({
+  const [features, setFeatures] = useState<EnvironmentalFeatures>({
     pm25: 68,
     no2: 45,
     temp: 34,
@@ -15,66 +22,22 @@ export function EcovisionInspector() {
     wind: 4,
   });
 
-  const updateFeature = (key: string, val: number) => {
+  const updateFeature = (key: keyof EnvironmentalFeatures, val: number) => {
     sound.playHover();
     setFeatures((prev) => ({ ...prev, [key]: val }));
   };
 
-  const BASELINE_RISK = 42.0;
+  const shapAttributions = getShapAttributions(features);
+  const calculatedRisk = computeTotalRisk(features);
+  const riskCategory = classifyRiskLevel(calculatedRisk);
 
-  const shapAttributions = [
-    {
-      name: "PM2.5 Particulate",
-      key: "pm25",
-      unit: "µg/m³",
-      value: features.pm25,
-      shapValue: ((features.pm25 - 35) * 0.45),
-      detail: features.pm25 > 50 ? "Heavy particulate concentration pushing risk above baseline" : "Low particulate level mitigating total risk",
-    },
-    {
-      name: "Nitrogen Dioxide (NO₂)",
-      key: "no2",
-      unit: "ppb",
-      value: features.no2,
-      shapValue: ((features.no2 - 30) * 0.35),
-      detail: features.no2 > 40 ? "Vehicular combustion emissions elevate hazardous index" : "Standard ambient NO₂ within acceptable threshold",
-    },
-    {
-      name: "Ambient Temperature",
-      key: "temp",
-      unit: "°C",
-      value: features.temp,
-      shapValue: ((features.temp - 25) * 0.28),
-      detail: features.temp > 32 ? "High heat accelerates photochemical smog reactivity" : "Moderate thermal conditions",
-    },
-    {
-      name: "Relative Humidity",
-      key: "humidity",
-      unit: "%",
-      value: features.humidity,
-      shapValue: ((features.humidity - 50) * 0.15),
-      detail: features.humidity > 70 ? "Moisture trapping pollutants near ground level" : "Adequate dry dispersal index",
-    },
-    {
-      name: "Surface Wind Speed",
-      key: "wind",
-      unit: "km/h",
-      value: features.wind,
-      shapValue: ((8 - features.wind) * 0.6),
-      detail: features.wind < 6 ? "Stagnant airflow prevents particulate dispersion" : "Strong air currents actively dissipate atmospheric contaminants",
-    },
-  ];
-
-  const totalShapOffset = shapAttributions.reduce((acc, curr) => acc + curr.shapValue, 0);
-  const calculatedRisk = Math.max(5, Math.min(100, Math.round((BASELINE_RISK + totalShapOffset) * 10) / 10));
-
-  const getRiskStatus = (score: number) => {
-    if (score < 40) return { label: "Low Ecological Risk", color: "text-emerald-400", bg: "bg-emerald-950/40 border-[#10b981]", icon: CheckCircle2 };
-    if (score < 70) return { label: "Moderate Risk / Watchlist", color: "text-[#ffea00]", bg: "bg-amber-950/40 border-[#ffea00]", icon: AlertTriangle };
+  const getRiskStatus = (level: ReturnType<typeof classifyRiskLevel>) => {
+    if (level === "low") return { label: "Low Ecological Risk", color: "text-emerald-400", bg: "bg-emerald-950/40 border-[#10b981]", icon: CheckCircle2 };
+    if (level === "moderate") return { label: "Moderate Risk / Watchlist", color: "text-[#ffea00]", bg: "bg-amber-950/40 border-[#ffea00]", icon: AlertTriangle };
     return { label: "Critical Hazard Alert", color: "text-[#ff2a5f]", bg: "bg-rose-950/40 border-[#ff2a5f]", icon: AlertTriangle };
   };
 
-  const riskStatus = getRiskStatus(calculatedRisk);
+  const riskStatus = getRiskStatus(riskCategory);
   const StatusIcon = riskStatus.icon;
 
   return (

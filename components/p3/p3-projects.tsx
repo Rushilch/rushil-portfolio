@@ -15,20 +15,20 @@ export function P3Projects({ onSelectProject }: P3ProjectsProps) {
   const [selectedCategory, setSelectedCategory] = useState<ProjectCategory>("all");
 
   const categories = [
-    { id: "all" as ProjectCategory, label: "ALL QUESTS", count: PROJECTS.length },
+    { id: "all" as ProjectCategory, label: "All Systems", count: PROJECTS.length },
     {
       id: "ml-cv" as ProjectCategory,
-      label: "APPLIED ML & CV",
+      label: "Applied ML & CV",
       count: PROJECTS.filter((p) => p.category === "ml-cv").length,
     },
     {
       id: "backend-systems" as ProjectCategory,
-      label: "BACKEND & SYSTEMS",
+      label: "Backend & Systems",
       count: PROJECTS.filter((p) => p.category === "backend-systems").length,
     },
     {
       id: "desktop-tools" as ProjectCategory,
-      label: "DESKTOP & ARCH",
+      label: "Desktop & Tools",
       count: PROJECTS.filter((p) => p.category === "desktop-tools").length,
     },
   ];
@@ -38,16 +38,16 @@ export function P3Projects({ onSelectProject }: P3ProjectsProps) {
       ? PROJECTS
       : PROJECTS.filter((p) => p.category === selectedCategory);
 
-  const getRankBadge = (id: string) => {
+  const getSystemBadge = (id: string) => {
     switch (id) {
       case "vaaniverse":
       case "smartinbox":
-        return { label: "RANK S", color: "bg-[#ff2a5f] text-white" };
+        return { label: "Featured", color: "bg-[#00d2ff] text-[#030712]" };
       case "ecovision":
       case "school-portal":
-        return { label: "RANK A", color: "bg-[#00d2ff] text-[#030712]" };
+        return { label: "Core System", color: "bg-[#10b981] text-[#030712]" };
       default:
-        return { label: "RANK B", color: "bg-[#ffea00] text-[#030712]" };
+        return { label: "Desktop Tool", color: "bg-[#ffea00] text-[#030712]" };
     }
   };
 
@@ -57,18 +57,18 @@ export function P3Projects({ onSelectProject }: P3ProjectsProps) {
         {/* Section Title Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
           <div>
-            <div className="inline-flex items-center gap-2 bg-[#00d2ff] text-[#030712] px-3 py-0.5 text-xs font-mono font-black uppercase transform skew-x-[-12deg] mb-2">
+            <div className="inline-flex items-center gap-2 bg-[#00d2ff] text-[#030712] px-3 py-0.5 text-xs font-mono font-bold transform skew-x-[-12deg] mb-2">
               <span className="transform skew-x-[12deg] flex items-center gap-1.5">
                 <FolderGit2 className="w-3.5 h-3.5" />
-                [QUEST LOG // MISSION ARCHIVE]
+                Project Archive &bull; System Dossiers
               </span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#f0f8ff] tracking-tight uppercase font-sans">
-              FEATURED WORKING SYSTEMS
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#f0f8ff] tracking-tight font-sans">
+              Featured Working Systems
             </h2>
             <p className="text-xs sm:text-sm font-mono text-slate-400 mt-2 max-w-xl">
-              Concrete software systems engineered from model architecture and database design to deployment.
+              Concrete software systems I have engineered from model architecture and database design to deployment.
             </p>
           </div>
 
@@ -82,7 +82,7 @@ export function P3Projects({ onSelectProject }: P3ProjectsProps) {
                   setSelectedCategory(cat.id);
                 }}
                 onMouseEnter={() => sound.playHover()}
-                className={`text-xs px-3 py-1.5 font-mono font-bold uppercase transition-all ${
+                className={`text-xs px-3 py-1.5 font-mono font-bold transition-all ${
                   selectedCategory === cat.id
                     ? "bg-[#00d2ff] text-[#030712] shadow-[0_0_15px_#00d2ff]"
                     : "text-slate-400 hover:text-[#00d2ff]"
@@ -97,7 +97,7 @@ export function P3Projects({ onSelectProject }: P3ProjectsProps) {
         {/* Project Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.map((project) => {
-            const rank = getRankBadge(project.id);
+            const badge = getSystemBadge(project.id);
 
             return (
               <article
@@ -109,19 +109,19 @@ export function P3Projects({ onSelectProject }: P3ProjectsProps) {
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#00d2ff] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
                 <div>
-                  {/* Meta Header with Rank & Category */}
+                  {/* Meta Header with Status & Category */}
                   <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="text-[10px] font-mono font-bold text-[#00d2ff] bg-[#030712] px-2 py-0.5 border border-[#00d2ff]/40 uppercase">
+                    <span className="text-[10px] font-mono font-medium text-[#00d2ff] bg-[#030712] px-2 py-0.5 border border-[#00d2ff]/40">
                       {project.categoryLabel}
                     </span>
 
-                    <span className={`text-[10px] font-mono font-black px-2 py-0.5 uppercase ${rank.color}`}>
-                      {rank.label}
+                    <span className={`text-[10px] font-mono font-bold px-2 py-0.5 ${badge.color}`}>
+                      {badge.label}
                     </span>
                   </div>
 
                   {/* Title & Tagline */}
-                  <h3 className="text-xl font-black text-[#f0f8ff] group-hover:text-[#00d2ff] transition-colors font-mono uppercase">
+                  <h3 className="text-xl font-bold text-[#f0f8ff] group-hover:text-[#00d2ff] transition-colors font-mono">
                     {project.title}
                   </h3>
                   <p className="text-xs font-mono text-slate-400 mt-1 mb-3 line-clamp-2">
@@ -138,14 +138,14 @@ export function P3Projects({ onSelectProject }: P3ProjectsProps) {
                     <div className="grid grid-cols-2 gap-2 mb-4 bg-[#030712] border border-slate-800 p-2.5">
                       {project.metrics.slice(0, 2).map((m, i) => (
                         <div key={i}>
-                          <div className="text-[9px] font-mono text-slate-500 uppercase">{m.label}</div>
+                          <div className="text-[9px] font-mono text-slate-500">{m.label}</div>
                           <div className="text-xs font-mono font-bold text-[#00d2ff]">{m.value}</div>
                         </div>
                       ))}
                     </div>
                   )}
 
-                  {/* Tech Badges */}
+                  {/* Tech Stack Badges */}
                   <div className="flex flex-wrap gap-1 mb-5">
                     {project.techStack.slice(0, 4).map((tech) => (
                       <span
@@ -168,7 +168,7 @@ export function P3Projects({ onSelectProject }: P3ProjectsProps) {
                     onMouseEnter={() => sound.playHover()}
                     className="flex items-center gap-1.5 text-xs font-mono font-bold text-[#00d2ff] hover:text-white transition-colors group/btn"
                   >
-                    <span>INSPECT</span>
+                    <span>Inspect System</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
                   </button>
 

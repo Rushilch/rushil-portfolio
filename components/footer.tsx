@@ -24,9 +24,6 @@ export function Footer() {
                 Software Engineer
               </span>
             </div>
-            <p className="text-slate-500 text-[11px] mt-0.5">
-              Built with Next.js, TypeScript, Tailwind CSS &amp; Framer Motion.
-            </p>
           </div>
 
           {/* Social Links */}
@@ -70,10 +67,10 @@ export function Footer() {
 
         <div className="mt-8 pt-6 border-t border-[#1e293b]/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-500 font-mono">
           <div>
-            &copy; {new Date().getFullYear()} Rushil Chilakamarri. All rights reserved.
+            Rushil Chilakamarri
           </div>
           <div>
-            Aurora&apos;s Technological and Research Institute, Hyderabad &bull; B.Tech CS (Data Science)
+            B.Tech CS (Data Science)
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Search, X, FolderGit2, Cpu, GraduationCap, Mail, Phone, FileText, ExternalLink, ArrowRight } from "lucide-react";
 import { PERSONAL_INFO, PROJECTS } from "@/data/portfolio-data";
+import { filterProjects } from "@/lib/search-filter";
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -30,12 +31,7 @@ export function CommandPalette({ isOpen, onClose, onOpenResume, onSelectProject 
 
   if (!isOpen) return null;
 
-  const filteredProjects = PROJECTS.filter(
-    (p) =>
-      p.title.toLowerCase().includes(query.toLowerCase()) ||
-      p.techStack.some((t) => t.toLowerCase().includes(query.toLowerCase())) ||
-      p.tagline.toLowerCase().includes(query.toLowerCase())
-  );
+  const filteredProjects = filterProjects(PROJECTS, query);
 
   const handleAction = (callback: () => void) => {
     callback();

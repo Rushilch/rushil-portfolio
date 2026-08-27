@@ -124,6 +124,19 @@
   animation: p3-shimmer 3.5s infinite linear;
 }
 
+@keyframes p3-hop {
+  0% { transform: translateY(0) scale(1, 1); }
+  25% { transform: translateY(2px) scale(1.04, 0.94); }
+  50% { transform: translateY(-8px) scale(0.96, 1.05); }
+  75% { transform: translateY(1px) scale(1.02, 0.98); }
+  100% { transform: translateY(0) scale(1, 1); }
+}
+
+@keyframes p3-head-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
 /* Prefers-reduced-motion accessibility support */
 @media (prefers-reduced-motion: reduce) {
   *,

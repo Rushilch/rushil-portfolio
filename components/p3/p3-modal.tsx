@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { X, ExternalLink, Cpu, ShieldCheck, Layers, ArrowRight, Sparkles } from "lucide-react";
+import { X, ExternalLink, Cpu, ShieldCheck, Layers, ArrowRight, Sparkles, Terminal } from "lucide-react";
 import { Project } from "@/types/portfolio";
 import { GithubIcon } from "@/components/icons";
 import { sound } from "@/lib/sound";
@@ -11,6 +11,8 @@ import { SchoolPortalTopology } from "../interactive-demos/school-portal-topolog
 import { ProctoringDemo } from "../interactive-demos/proctoring-demo";
 import { MailsenseSimulator } from "../interactive-demos/mailsense-simulator";
 import { MvvmDiagram } from "../interactive-demos/mvvm-diagram";
+import { CarRentalSimulator } from "../interactive-demos/car-rental-simulator";
+import { PomodoroSimulator } from "../interactive-demos/pomodoro-simulator";
 
 interface P3ModalProps {
   project: Project | null;
@@ -45,6 +47,10 @@ export function P3Modal({ project, onClose }: P3ModalProps) {
         return <MailsenseSimulator />;
       case "mvvm":
         return <MvvmDiagram />;
+      case "car-rental":
+        return <CarRentalSimulator />;
+      case "pomodoro":
+        return <PomodoroSimulator />;
       default:
         return null;
     }
@@ -53,7 +59,7 @@ export function P3Modal({ project, onClose }: P3ModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 bg-black/90 backdrop-blur-md animate-in fade-in duration-150">
       <div className="bg-[#060e22] border-2 border-[#00d2ff] p3-cut-corner-lg w-full max-w-5xl max-h-[92vh] flex flex-col shadow-[0_0_50px_rgba(0,210,255,0.35)] overflow-hidden">
-        {/* Persona 3 Top Modal Bar */}
+        {/* Top Modal Bar */}
         <div className="flex items-center justify-between px-6 py-4 border-b-2 border-[#00d2ff]/40 bg-[#030712] shrink-0">
           <div className="flex items-center gap-3 font-mono">
             <span className="text-xs font-black text-[#030712] bg-[#00d2ff] px-2.5 py-0.5 uppercase">
@@ -82,7 +88,7 @@ export function P3Modal({ project, onClose }: P3ModalProps) {
             <button
               onClick={handleClose}
               className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 transition-all font-mono font-bold"
-              aria-label="Close modal"
+              aria-label="Close modal [Press Escape]"
             >
               <X className="w-5 h-5" />
             </button>
@@ -91,11 +97,11 @@ export function P3Modal({ project, onClose }: P3ModalProps) {
 
         {/* Scrollable Modal Body */}
         <div className="p-6 md:p-8 overflow-y-auto space-y-8 text-slate-300 text-sm">
-          {/* Persona 3 Dialogue Box Header */}
+          {/* Engineering Briefing Box */}
           <div className="bg-[#030712] border-2 border-[#00d2ff]/30 p-4 p3-diagonal-border">
             <div className="text-[10px] font-mono text-[#00d2ff] font-bold uppercase tracking-widest mb-1 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
-              MISSION BRIEFING // ROLE: {project.role.toUpperCase()}
+              <Terminal className="w-3.5 h-3.5" />
+              SYSTEM SPECIFICATION // ROLE: {project.role.toUpperCase()}
             </div>
             <p className="text-sm md:text-base text-[#f0f8ff] font-mono font-bold leading-relaxed">
               &quot;{project.tagline}&quot;
@@ -172,7 +178,7 @@ export function P3Modal({ project, onClose }: P3ModalProps) {
           {/* Tech Stack Badges */}
           <div>
             <h3 className="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold mb-3">
-              [EQUIPPED TECHNOLOGIES &amp; LIBRARIES]
+              [TECHNOLOGY STACK]
             </h3>
             <div className="flex flex-wrap gap-2">
               {project.techStack.map((tech) => (
@@ -189,7 +195,7 @@ export function P3Modal({ project, onClose }: P3ModalProps) {
 
         {/* Footer */}
         <div className="px-6 py-4 border-t-2 border-[#00d2ff]/40 bg-[#030712] flex items-center justify-between text-xs font-mono shrink-0">
-          <span className="text-slate-500">AUTHENTIC REPOSITORY IMPLEMENTATION</span>
+          <span className="text-slate-500">PRODUCTION SYSTEM SPECIFICATION</span>
           {project.githubUrl && (
             <a
               href={project.githubUrl}
@@ -198,7 +204,7 @@ export function P3Modal({ project, onClose }: P3ModalProps) {
               onMouseEnter={() => sound.playHover()}
               className="text-[#00d2ff] hover:underline font-bold flex items-center gap-1"
             >
-              EXPLORE ON GITHUB &rarr;
+              VIEW ON GITHUB &rarr;
             </a>
           )}
         </div>

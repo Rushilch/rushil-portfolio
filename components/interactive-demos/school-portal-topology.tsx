@@ -3,12 +3,13 @@
 import React, { useState } from "react";
 import { Server, Database, Container, KeyRound, Play, CheckCircle2, ShieldAlert, Cpu } from "lucide-react";
 import { sound } from "@/lib/sound";
+import { checkAuthorization, UserRole } from "@/lib/rbac-logic";
 
 interface EndpointDemo {
   method: "GET" | "POST" | "PUT";
   path: string;
   authRequired: boolean;
-  role: "Admin" | "Teacher" | "Student" | "Public";
+  role: UserRole;
   requestBody?: string;
   responseStatus: number;
   responsePayload: string;
@@ -92,9 +93,10 @@ export function SchoolPortalTopology() {
 
     setTimeout(() => {
       setIsExecuting(false);
-      if (selectedEndpoint.role === "Admin" && activeRole !== "Admin") {
+      const auth = checkAuthorization(selectedEndpoint.role, activeRole);
+      if (!auth.authorized) {
         sound.playCancel();
-        setExecutionResult("403 Forbidden: Identity role 'Admin' required for this endpoint.");
+        setExecutionResult(`403 Forbidden: ${auth.reason || "Unauthorized"}`);
       } else {
         sound.playSelect();
         setExecutionResult(selectedEndpoint.responsePayload);

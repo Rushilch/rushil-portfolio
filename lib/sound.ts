@@ -3,50 +3,156 @@
 // Web Audio API Synthesizer for Persona 3 / Persona 3 Reload SFX & Neo-Soul BGM
 // 100% synthesized in-browser, 0 external audio assets needed, instant response!
 
+type AudioStateListener = () => void;
+
+export interface BgmTrack {
+  id: string;
+  name: string;
+  subtitle: string;
+  bpm: number;
+  intervalMs: number;
+  chords: { bass: number; notes: number[] }[];
+}
+
+export const BGM_TRACKS: BgmTrack[] = [
+  {
+    id: "iwatodai",
+    name: "Iwatodai Night",
+    subtitle: "Neo-Soul Rhodes & Sub-Bass",
+    bpm: 85,
+    intervalMs: 450,
+    // Dm9 -> G13 -> Cmaj9 -> A7#9
+    chords: [
+      { bass: 73.42, notes: [293.66, 349.23, 440.0, 523.25, 659.25] },
+      { bass: 98.0, notes: [349.23, 493.88, 659.25, 783.99] },
+      { bass: 65.41, notes: [261.63, 329.63, 392.0, 493.88, 587.33] },
+      { bass: 110.0, notes: [392.0, 554.37, 698.46, 880.0] },
+    ],
+  },
+  {
+    id: "memories",
+    name: "Memories of You",
+    subtitle: "Gentle Melodic Progression",
+    bpm: 78,
+    intervalMs: 480,
+    // Fmaj7 -> Em7 -> Dm7 -> Cmaj7
+    chords: [
+      { bass: 87.31, notes: [349.23, 440.0, 523.25, 659.25] },
+      { bass: 82.41, notes: [329.63, 392.0, 493.88, 587.33] },
+      { bass: 73.42, notes: [293.66, 349.23, 440.0, 523.25] },
+      { bass: 65.41, notes: [261.63, 329.63, 392.0, 493.88] },
+    ],
+  },
+  {
+    id: "color-night",
+    name: "Color Your Night",
+    subtitle: "Smooth Jazz Lo-Fi",
+    bpm: 90,
+    intervalMs: 420,
+    // Am9 -> D9 -> Gmaj9 -> Cmaj7
+    chords: [
+      { bass: 110.0, notes: [330.0, 392.0, 493.88, 587.33] },
+      { bass: 73.42, notes: [293.66, 369.99, 440.0, 523.25] },
+      { bass: 98.0, notes: [293.66, 392.0, 493.88, 587.33] },
+      { bass: 65.41, notes: [261.63, 329.63, 392.0, 493.88] },
+    ],
+  },
+  {
+    id: "burn-dread",
+    name: "Burn My Dread",
+    subtitle: "Rhythmic Ambient Sub-Bass",
+    bpm: 95,
+    intervalMs: 395,
+    // Em9 -> Cmaj7 -> Am9 -> B7#9
+    chords: [
+      { bass: 82.41, notes: [330.0, 392.0, 493.88, 587.33] },
+      { bass: 65.41, notes: [261.63, 329.63, 392.0, 493.88] },
+      { bass: 110.0, notes: [330.0, 392.0, 440.0, 523.25] },
+      { bass: 123.47, notes: [370.0, 466.16, 587.33, 740.0] },
+    ],
+  },
+];
+
 class PersonaBgmEngine {
   private ctx: AudioContext | null = null;
   public isPlaying: boolean = false;
-  private timerId: any = null;
+  private timerId: ReturnType<typeof setInterval> | null = null;
   private masterGain: GainNode | null = null;
   public volume: number = 0.25;
   private step: number = 0;
+  public currentTrackIndex: number = 0;
+  private listeners: Set<AudioStateListener> = new Set();
 
-  private initCtx() {
-    if (!this.ctx && typeof window !== "undefined") {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-      if (AudioCtx) {
-        this.ctx = new AudioCtx();
-        this.masterGain = this.ctx.createGain();
-        this.masterGain.gain.setValueAtTime(this.volume, this.ctx.currentTime);
-        this.masterGain.connect(this.ctx.destination);
-      }
+  public subscribe(fn: AudioStateListener): () => void {
+    this.listeners.add(fn);
+    return () => {
+      this.listeners.delete(fn);
+    };
+  }
+
+  public notify() {
+    this.listeners.forEach((fn) => fn());
+  }
+
+  public getCurrentTrack(): BgmTrack {
+    return BGM_TRACKS[this.currentTrackIndex] || BGM_TRACKS[0];
+  }
+
+  public getTrackName(): string {
+    return this.getCurrentTrack().name;
+  }
+
+  public nextTrack(): BgmTrack {
+    this.currentTrackIndex = (this.currentTrackIndex + 1) % BGM_TRACKS.length;
+    this.step = 0;
+    if (this.isPlaying) {
+      this.stop();
+      this.start();
+    } else {
+      this.start();
     }
-    if (this.ctx && this.ctx.state === "suspended") {
-      this.ctx.resume();
+    this.notify();
+    return this.getCurrentTrack();
+  }
+
+  public setTrack(index: number) {
+    if (index >= 0 && index < BGM_TRACKS.length) {
+      this.currentTrackIndex = index;
+      this.step = 0;
+      if (this.isPlaying) {
+        this.stop();
+        this.start();
+      }
+      this.notify();
     }
   }
 
-  // Persona 3 inspired Neo-Soul / Acid Jazz chord progression
-  // Chords: Dm9 -> G13 -> Cmaj9 -> A7#9 (Iwatodai / Paulownia Mall / Tartarus Chill vibe)
-  private chords = [
-    // Dm9 (D, F, A, C, E)
-    { bass: 73.42, notes: [293.66, 349.23, 440.0, 523.25, 659.25] },
-    // G13 (G, F, B, E)
-    { bass: 98.0, notes: [349.23, 493.88, 659.25, 783.99] },
-    // Cmaj9 (C, E, G, B, D)
-    { bass: 65.41, notes: [261.63, 329.63, 392.0, 493.88, 587.33] },
-    // A7alt (A, G, C#, F)
-    { bass: 110.0, notes: [392.0, 554.37, 698.46, 880.0] },
-  ];
+  private initCtx() {
+    if (!this.ctx && typeof window !== "undefined") {
+      const win = window as unknown as { AudioContext?: typeof AudioContext; webkitAudioContext?: typeof AudioContext };
+      const AudioCtx = win.AudioContext || win.webkitAudioContext;
+      if (AudioCtx) {
+        const context = new AudioCtx();
+        this.ctx = context;
+        const gain = context.createGain();
+        gain.gain.setValueAtTime(this.volume, context.currentTime);
+        gain.connect(context.destination);
+        this.masterGain = gain;
+      }
+    }
+    if (this.ctx && this.ctx.state === "suspended") {
+      void this.ctx.resume();
+    }
+  }
 
   public toggleBgm(): boolean {
     if (this.isPlaying) {
       this.stop();
-      return false;
     } else {
       this.start();
-      return true;
     }
+    this.notify();
+    return this.isPlaying;
   }
 
   public setVolume(val: number) {
@@ -54,6 +160,7 @@ class PersonaBgmEngine {
     if (this.masterGain && this.ctx) {
       this.masterGain.gain.setValueAtTime(val, this.ctx.currentTime);
     }
+    this.notify();
   }
 
   public start() {
@@ -61,12 +168,16 @@ class PersonaBgmEngine {
     if (!this.ctx || !this.masterGain) return;
     this.isPlaying = true;
     this.step = 0;
+    this.notify();
+
+    const track = this.getCurrentTrack();
 
     const playChordStep = () => {
       if (!this.isPlaying || !this.ctx || !this.masterGain) return;
 
-      const chordIndex = Math.floor(this.step / 4) % this.chords.length;
-      const chord = this.chords[chordIndex];
+      const currentTrack = this.getCurrentTrack();
+      const chordIndex = Math.floor(this.step / 4) % currentTrack.chords.length;
+      const chord = currentTrack.chords[chordIndex];
       const now = this.ctx.currentTime;
       const beatInChord = this.step % 4;
 
@@ -79,8 +190,6 @@ class PersonaBgmEngine {
 
           osc.type = "sine";
           osc.frequency.setValueAtTime(freq, now);
-
-          // Subtle detune for lush vintage chorus
           osc.detune.setValueAtTime((idx - 2) * 4, now);
 
           const baseGain = 0.035;
@@ -128,8 +237,10 @@ class PersonaBgmEngine {
       this.step++;
     };
 
-    // 85 BPM Lo-Fi tempo (approx 350ms per sixteenth/quarter step)
-    this.timerId = setInterval(playChordStep, 450);
+    if (this.timerId) {
+      clearInterval(this.timerId);
+    }
+    this.timerId = setInterval(playChordStep, track.intervalMs);
   }
 
   public stop() {
@@ -138,6 +249,7 @@ class PersonaBgmEngine {
       clearInterval(this.timerId);
       this.timerId = null;
     }
+    this.notify();
   }
 }
 
@@ -145,16 +257,36 @@ class SoundEngine {
   private ctx: AudioContext | null = null;
   public enabled: boolean = true;
   public bgm = new PersonaBgmEngine();
+  private listeners: Set<AudioStateListener> = new Set();
+
+  public subscribe(fn: AudioStateListener): () => void {
+    this.listeners.add(fn);
+    return () => {
+      this.listeners.delete(fn);
+    };
+  }
+
+  public notify() {
+    this.listeners.forEach((fn) => fn());
+  }
+
+  public toggleSfx(): boolean {
+    this.enabled = !this.enabled;
+    if (this.enabled) this.playSelect();
+    this.notify();
+    return this.enabled;
+  }
 
   private initCtx() {
     if (!this.ctx && typeof window !== "undefined") {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      const win = window as unknown as { AudioContext?: typeof AudioContext; webkitAudioContext?: typeof AudioContext };
+      const AudioCtx = win.AudioContext || win.webkitAudioContext;
       if (AudioCtx) {
         this.ctx = new AudioCtx();
       }
     }
     if (this.ctx && this.ctx.state === "suspended") {
-      this.ctx.resume();
+      void this.ctx.resume();
     }
   }
 
@@ -169,8 +301,8 @@ class SoundEngine {
       const gain = this.ctx.createGain();
       
       osc.type = "sine";
-      osc.frequency.setValueAtTime(1046.5, this.ctx.currentTime); // C6
-      osc.frequency.exponentialRampToValueAtTime(1567.98, this.ctx.currentTime + 0.035); // G6
+      osc.frequency.setValueAtTime(1046.5, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1567.98, this.ctx.currentTime + 0.035);
 
       gain.gain.setValueAtTime(0.045, this.ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.045);
@@ -180,10 +312,12 @@ class SoundEngine {
 
       osc.start();
       osc.stop(this.ctx.currentTime + 0.045);
-    } catch (e) {}
+    } catch {
+      // Audio autoplay policy catch
+    }
   }
 
-  // Persona 3 Reload selection chime (satisfying futuristic double-pulse)
+  // Persona 3 Reload selection chime
   public playSelect() {
     if (!this.enabled) return;
     try {
@@ -198,8 +332,8 @@ class SoundEngine {
       osc1.type = "triangle";
       osc2.type = "sine";
 
-      osc1.frequency.setValueAtTime(587.33, now); // D5
-      osc1.frequency.exponentialRampToValueAtTime(1174.66, now + 0.08); // D6
+      osc1.frequency.setValueAtTime(587.33, now);
+      osc1.frequency.exponentialRampToValueAtTime(1174.66, now + 0.08);
 
       osc2.frequency.setValueAtTime(880, now + 0.04);
       osc2.frequency.exponentialRampToValueAtTime(1760, now + 0.12);
@@ -215,7 +349,9 @@ class SoundEngine {
       osc1.stop(now + 0.12);
       osc2.start(now + 0.04);
       osc2.stop(now + 0.18);
-    } catch (e) {}
+    } catch {
+      // Audio autoplay policy catch
+    }
   }
 
   // Persona 3 menu switch swoosh
@@ -242,7 +378,9 @@ class SoundEngine {
 
       osc.start(now);
       osc.stop(now + 0.14);
-    } catch (e) {}
+    } catch {
+      // Audio autoplay policy catch
+    }
   }
 
   // Persona 3 back/cancel sound
@@ -268,7 +406,9 @@ class SoundEngine {
 
       osc.start(now);
       osc.stop(now + 0.1);
-    } catch (e) {}
+    } catch {
+      // Audio autoplay policy catch
+    }
   }
 }
 
