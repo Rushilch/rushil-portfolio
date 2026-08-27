@@ -1,0 +1,12 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "f7261e196d4afbd3552503b0f4469a81b56b07bb",
+  "prompts": {},
+  "humans": {
+    "h_a7a39243946b44": {
+      "author": "Rushil <rushilchilakamarri@gmail.com>"
+    }
+  }
+}
