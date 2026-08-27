@@ -1,0 +1,26 @@
+__tests__/lib/search-filter.test.ts
+  h_a7a39243946b44 29-34
+components/interactive-demos/jira-board-simulator.tsx
+  h_a7a39243946b44 1-412
+components/p3/p3-hero.tsx
+  h_a7a39243946b44 22
+components/p3/p3-modal.tsx
+  h_a7a39243946b44 16,55-56
+components/p3/p3-projects.tsx
+  h_a7a39243946b44 45
+data/portfolio-data.ts
+  h_a7a39243946b44 559-624,639-640,653-654,660-661,708-724,752
+types/portfolio.ts
+  h_a7a39243946b44 34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "d14325eda2135682e85154a338e00d2af763ed11",
+  "prompts": {},
+  "humans": {
+    "h_a7a39243946b44": {
+      "author": "Rushil <rushilchilakamarri@gmail.com>"
+    }
+  }
+}
