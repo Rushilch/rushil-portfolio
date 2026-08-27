@@ -10,12 +10,13 @@ import {
   Database,
   Terminal,
   ShieldCheck,
-  Plus,
   RotateCcw,
   Sparkles,
   Layers,
   User,
-  Tag,
+  BookOpen,
+  Feather,
+  Zap,
 } from "lucide-react";
 import { sound } from "@/lib/sound";
 
@@ -34,85 +35,116 @@ export interface JiraIssue {
   description: string;
 }
 
+interface DemoUser {
+  name: string;
+  role: "Owner" | "Admin" | "Member";
+  initials: string;
+}
+
+const DEMO_USERS: DemoUser[] = [
+  { name: "Alex V.", role: "Owner", initials: "AV" },
+  { name: "Sarah L.", role: "Admin", initials: "SL" },
+  { name: "Marcus K.", role: "Member", initials: "MK" },
+  { name: "Elena R.", role: "Member", initials: "ER" },
+];
+
 const INITIAL_ISSUES: JiraIssue[] = [
   {
     id: "ISS-101",
-    key: "PROJ-101",
-    title: "Implement ADO.NET SqlTransaction boundary for Sprint closure",
+    key: "LEDGER-101",
+    title: "Execute sp_GetBoardData multi-result retrieval in single roundtrip",
     status: "done",
     priority: "Urgent",
-    assignee: "Rushil C.",
+    assignee: "Alex V.",
     sprint: "Sprint 3",
     estimate: "5 SP",
-    description: "Ensure atomic transaction commit/rollback across active tasks when closing sprint.",
+    description: "Returns project metadata, active sprint, and column-grouped issues with zero ORM overhead.",
   },
   {
     id: "ISS-102",
-    key: "PROJ-102",
-    title: "Angular CDK Drag-and-Drop Kanban with optimistic rollback",
+    key: "LEDGER-102",
+    title: "Angular 19 Signal-based CDK Drag-and-Drop with optimistic rollback",
     status: "review",
     priority: "High",
-    assignee: "Rushil C.",
+    assignee: "Sarah L.",
     sprint: "Sprint 3",
     estimate: "8 SP",
-    description: "Optimistically move issue card; rollback UI state if backend returns HTTP 4xx/5xx.",
+    description: "Optimistically updates UI ledger state; rollbacks state if backend API yields HTTP 4xx/5xx.",
   },
   {
     id: "ISS-103",
-    key: "PROJ-103",
-    title: "Enforce strict SqlParameter bindings on Issue Search API",
+    key: "LEDGER-103",
+    title: "Enforce strict SqlParameter bindings & connection pool (Min=5, Max=100)",
     status: "in-progress",
     priority: "High",
-    assignee: "Rushil C.",
+    assignee: "Marcus K.",
     sprint: "Sprint 3",
     estimate: "3 SP",
-    description: "Guard against SQL injection vulnerabilities in dynamic multi-filter text search.",
+    description: "Guards against SQL injection and maintains sub-millisecond pooled connection acquisition.",
   },
   {
     id: "ISS-104",
-    key: "PROJ-104",
-    title: "JWT HTTP Interceptor with RFC 7807 ProblemDetails handling",
+    key: "LEDGER-104",
+    title: "Sliding IMemoryCache invalidation on mutable sprint actions",
     status: "todo",
     priority: "Medium",
-    assignee: "Rushil C.",
+    assignee: "Elena R.",
     sprint: "Sprint 3",
     estimate: "3 SP",
-    description: "Catch expired 401 tokens and format standardized backend validation error toasts.",
+    description: "Delivers ~1ms cached response time with immediate write-through invalidation on card drag.",
   },
   {
     id: "ISS-105",
-    key: "PROJ-105",
-    title: "Design SQL Server composite index on (ProjectId, Status, AssigneeId)",
+    key: "LEDGER-105",
+    title: "Auto-migrating DbInitializer & xUnit + Moq test coverage",
     status: "todo",
     priority: "Medium",
-    assignee: "Rushil C.",
+    assignee: "Alex V.",
     sprint: "Sprint 3",
     estimate: "2 SP",
-    description: "Accelerate board filtering query execution plan under high concurrency.",
+    description: "Executes raw DDL seed scripts on startup and validates service-layer domain logic.",
   },
 ];
 
 const COLUMNS: { id: IssueStatus; label: string; color: string; border: string; bg: string }[] = [
   { id: "todo", label: "To Do", color: "text-slate-300", border: "border-slate-700", bg: "bg-slate-900/40" },
   { id: "in-progress", label: "In Progress", color: "text-[#00d2ff]", border: "border-[#00d2ff]/50", bg: "bg-cyan-950/20" },
-  { id: "review", label: "Code Review", color: "text-[#ffea00]", border: "border-[#ffea00]/50", bg: "bg-amber-950/20" },
+  { id: "review", label: "In Review", color: "text-[#ffea00]", border: "border-[#ffea00]/50", bg: "bg-amber-950/20" },
   { id: "done", label: "Done", color: "text-[#10b981]", border: "border-[#10b981]/50", bg: "bg-emerald-950/20" },
 ];
 
 export function JiraBoardSimulator() {
   const [issues, setIssues] = useState<JiraIssue[]>(INITIAL_ISSUES);
   const [selectedIssue, setSelectedIssue] = useState<JiraIssue>(INITIAL_ISSUES[2]);
+  const [activeUser, setActiveUser] = useState<DemoUser>(DEMO_USERS[0]);
   const [filterPriority, setFilterPriority] = useState<string>("All");
+  const [isStationeryInking, setIsStationeryInking] = useState<boolean>(false);
+  const [activeProcTab, setActiveProcTab] = useState<"board" | "sprint" | "dashboard">("board");
+
   const [lastExecutedSql, setLastExecutedSql] = useState<{
-    query: string;
-    params: Record<string, unknown>;
+    proc: string;
+    codeSnippet: string;
     executionTimeMs: number;
-    transactionStatus: string;
+    cacheStatus: string;
   }>({
-    query: "UPDATE Issues SET Status = @Status, UpdatedAt = SYSUTCDATETIME() WHERE Id = @IssueId",
-    params: { "@Status": "in-progress", "@IssueId": "ISS-103", "@UserId": "USR-401" },
-    executionTimeMs: 4.2,
-    transactionStatus: "COMMITTED (SqlTransaction)",
+    proc: "sp_GetBoardData",
+    codeSnippet: `// ASP.NET Core 10 (net10.0) • IssueRepository.cs (Pure ADO.NET)
+using var connection = new SqlConnection(_connectionString);
+await connection.OpenAsync();
+
+using var cmd = new SqlCommand("sp_UpdateIssueStatus", connection) {
+    CommandType = CommandType.StoredProcedure
+};
+
+// Strict SqlParameter Bindings (Zero SQLi)
+cmd.Parameters.Add(new SqlParameter("@IssueId", SqlDbType.NVarChar, 50) { Value = "ISS-103" });
+cmd.Parameters.Add(new SqlParameter("@Status", SqlDbType.NVarChar, 30) { Value = "InProgress" });
+cmd.Parameters.Add(new SqlParameter("@UserId", SqlDbType.NVarChar, 50) { Value = "USR-001" });
+
+await cmd.ExecuteNonQueryAsync();
+_memoryCache.Remove($"board_data_{projectId}"); // Invalidate sliding cache`,
+    executionTimeMs: 4.8,
+    cacheStatus: "DIRECT SQL EXECUTION (4.8ms) • Cache Invalidation Dispatched",
   });
 
   const moveIssue = (issueId: string, nextStatus: IssueStatus) => {
@@ -120,22 +152,37 @@ export function JiraBoardSimulator() {
     const issue = issues.find((i) => i.id === issueId);
     if (!issue) return;
 
+    setIsStationeryInking(true);
+    setTimeout(() => setIsStationeryInking(false), 900);
+
     const updated = issues.map((i) => (i.id === issueId ? { ...i, status: nextStatus } : i));
     setIssues(updated);
     setSelectedIssue({ ...issue, status: nextStatus });
 
-    // Generate real-time ADO.NET SQL dispatch snapshot
     setLastExecutedSql({
-      query: `BEGIN TRANSACTION;\n  UPDATE Issues SET Status = @Status, UpdatedAt = SYSUTCDATETIME() WHERE Id = @IssueId;\n  INSERT INTO IssueActivities (IssueId, UserId, Action, OldValue, NewValue)\n  VALUES (@IssueId, @UserId, 'StatusChanged', @OldStatus, @NewStatus);\nCOMMIT TRANSACTION;`,
-      params: {
-        "@IssueId": issue.id,
-        "@Status": nextStatus,
-        "@OldStatus": issue.status,
-        "@NewStatus": nextStatus,
-        "@UserId": "USR-401 (Rushil)",
-      },
-      executionTimeMs: Math.round((2.5 + Math.random() * 3) * 10) / 10,
-      transactionStatus: "COMMITTED (SqlTransaction • 0ms ORM Overhead)",
+      proc: "sp_UpdateIssueStatus",
+      codeSnippet: `// ASP.NET Core 10 (net10.0) • IssueRepository.cs (Pure ADO.NET)
+using var connection = new SqlConnection(_connectionString);
+await connection.OpenAsync();
+using var transaction = connection.BeginTransaction();
+
+using var cmd = new SqlCommand("sp_UpdateIssueStatus", connection, transaction) {
+    CommandType = CommandType.StoredProcedure
+};
+
+// Explicit Parameterized Bindings
+cmd.Parameters.Add(new SqlParameter("@IssueId", SqlDbType.NVarChar, 50) { Value = "${issue.id}" });
+cmd.Parameters.Add(new SqlParameter("@OldStatus", SqlDbType.NVarChar, 30) { Value = "${issue.status}" });
+cmd.Parameters.Add(new SqlParameter("@NewStatus", SqlDbType.NVarChar, 30) { Value = "${nextStatus}" });
+cmd.Parameters.Add(new SqlParameter("@ActorId", SqlDbType.NVarChar, 50) { Value = "${activeUser.name}" });
+
+await cmd.ExecuteNonQueryAsync();
+await transaction.CommitAsync();
+
+// Invalidate sliding IMemoryCache for Project Board
+_cache.Remove($"board_data_PROJ");`,
+      executionTimeMs: Math.round((3.8 + Math.random() * 2.4) * 10) / 10,
+      cacheStatus: "SQL SERVER TRANSACTION COMMITTED • Write-Through Cache Invalidated",
     });
   };
 
@@ -163,21 +210,85 @@ export function JiraBoardSimulator() {
     }
   };
 
+  const getProcCode = () => {
+    switch (activeProcTab) {
+      case "board":
+        return `-- Stored Procedure: sp_GetBoardData (Single Roundtrip Multi-Result Set)
+CREATE OR ALTER PROCEDURE sp_GetBoardData
+    @ProjectId NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Result 1: Project & Member Summary
+    SELECT Id, Name, ProjectKey, OwnerId FROM Projects WHERE Id = @ProjectId;
+    -- Result 2: Active Sprint Cadence
+    SELECT TOP 1 * FROM Sprints WHERE ProjectId = @ProjectId AND Status = 'Active';
+    -- Result 3: All Column-Grouped Issues with Assignee Avatars
+    SELECT i.*, u.FullName AS AssigneeName, u.Role
+    FROM Issues i
+    LEFT JOIN Users u ON i.AssigneeId = u.Id
+    WHERE i.ProjectId = @ProjectId
+    ORDER BY i.OrdinalRank ASC;
+END;`;
+      case "sprint":
+        return `-- Stored Procedure: sp_GetSprintSummary
+CREATE OR ALTER PROCEDURE sp_GetSprintSummary
+    @SprintId NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT 
+        COUNT(*) AS TotalIssues,
+        SUM(CASE WHEN Status = 'Done' THEN 1 ELSE 0 END) AS CompletedIssues,
+        SUM(StoryPoints) AS TotalStoryPoints,
+        CAST(SUM(CASE WHEN Status = 'Done' THEN StoryPoints ELSE 0 END) * 100.0 / NULLIF(SUM(StoryPoints), 0) AS DECIMAL(5,2)) AS VelocityPercentage
+    FROM Issues
+    WHERE SprintId = @SprintId;
+END;`;
+      case "dashboard":
+        return `// IMemoryCache Sliding Invalidation Layer (1ms response)
+public async Task<BoardDataDto> GetBoardDataAsync(string projectId)
+{
+    string cacheKey = $"board_data_{projectId}";
+    if (!_memoryCache.TryGetValue(cacheKey, out BoardDataDto board))
+    {
+        // ~5ms Direct ADO.NET SQL Server Stored Procedure Call
+        board = await _issueRepository.FetchBoardDataFromSqlAsync(projectId);
+        _memoryCache.Set(cacheKey, board, new MemoryCacheEntryOptions {
+            SlidingExpiration = TimeSpan.FromMinutes(5)
+        });
+    }
+    return board; // ~1ms cached delivery
+}`;
+    }
+  };
+
   return (
     <div className="bg-[#030712] border-2 border-[#00d2ff]/40 p-4 sm:p-6 p3-cut-corner text-xs font-mono space-y-5">
       {/* Top Banner */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
         <div className="flex items-center gap-2.5">
-          <Kanban className="w-4 h-4 text-[#00d2ff]" />
+          <BookOpen className="w-4 h-4 text-[#ffea00]" />
           <span className="font-bold text-[#f0f8ff] tracking-wide text-sm">
-            Angular 18+ &bull; Pure ADO.NET Kanban &amp; SQL Engine
+            JiraClone &bull; Editorial Journal &amp; Pure ADO.NET Engine
+          </span>
+          <span className="text-[10px] text-[#ffea00] border border-[#ffea00]/40 px-1.5 py-0.2 rounded bg-amber-950/30">
+            Editorial Paper UI
           </span>
         </div>
 
         <div className="flex items-center gap-2">
+          {isStationeryInking && (
+            <div className="flex items-center gap-1 text-[11px] bg-amber-500/20 text-[#ffea00] px-2.5 py-0.5 rounded border border-[#ffea00]/50 animate-pulse">
+              <Feather className="w-3 h-3" />
+              <span>✒️ Inking ledger...</span>
+            </div>
+          )}
+
           <span className="text-[10px] text-[#10b981] font-bold bg-[#060e22] px-2 py-0.5 border border-[#10b981]/40">
-            ● Backend: C# ASP.NET Core 8 Web API
+            ● .NET 10 Web API + Angular 19
           </span>
+
           <button
             onClick={handleReset}
             onMouseEnter={() => sound.playHover()}
@@ -190,17 +301,36 @@ export function JiraBoardSimulator() {
         </div>
       </div>
 
-      {/* Filter & Sprint Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-[#060e22] p-2.5 border border-slate-800">
-        <div className="flex items-center gap-2">
-          <span className="text-slate-400 font-bold">Active Sprint:</span>
-          <span className="bg-[#00d2ff]/20 text-[#00d2ff] px-2 py-0.5 rounded font-bold border border-[#00d2ff]/40">
-            Sprint 3 (Current)
-          </span>
+      {/* Role Switcher & Filter Bar */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-3 bg-[#060e22] p-2.5 border border-slate-800 items-center">
+        {/* Left: Role Switcher */}
+        <div className="md:col-span-6 flex items-center gap-2 flex-wrap">
+          <span className="text-slate-400 font-bold text-[11px]">Active Persona:</span>
+          {DEMO_USERS.map((u) => (
+            <button
+              key={u.name}
+              onClick={() => {
+                sound.playHover();
+                setActiveUser(u);
+              }}
+              className={`px-2 py-0.5 text-[10px] font-bold rounded transition-all flex items-center gap-1 ${
+                activeUser.name === u.name
+                  ? "bg-[#ffea00] text-[#030712] shadow-[0_0_10px_rgba(255,234,0,0.4)]"
+                  : "bg-[#030712] text-slate-400 border border-slate-800 hover:text-white"
+              }`}
+            >
+              <span className="w-3.5 h-3.5 rounded-full bg-slate-700 text-[8px] flex items-center justify-center font-bold">
+                {u.initials}
+              </span>
+              <span>{u.name}</span>
+              <span className="text-[9px] opacity-75">({u.role})</span>
+            </button>
+          ))}
         </div>
 
-        <div className="flex items-center gap-1.5">
-          <span className="text-slate-400">Filter Priority:</span>
+        {/* Right: Priority Filter */}
+        <div className="md:col-span-6 flex items-center justify-start md:justify-end gap-1.5 flex-wrap">
+          <span className="text-slate-400 text-[11px]">Filter:</span>
           {["All", "Urgent", "High", "Medium"].map((p) => (
             <button
               key={p}
@@ -252,12 +382,12 @@ export function JiraBoardSimulator() {
                       }}
                       className={`p-2.5 bg-[#030712] rounded border text-left cursor-pointer transition-all duration-200 ${
                         isSelected
-                          ? "border-[#00d2ff] shadow-[0_0_15px_rgba(0,210,255,0.3)] scale-[1.02]"
+                          ? "border-[#ffea00] shadow-[0_0_15px_rgba(255,234,0,0.25)] scale-[1.02]"
                           : "border-slate-800 hover:border-slate-600"
                       }`}
                     >
                       <div className="flex items-center justify-between gap-1 mb-1.5">
-                        <span className="text-[10px] text-[#00d2ff] font-bold">{issue.key}</span>
+                        <span className="text-[10px] text-[#ffea00] font-bold">{issue.key}</span>
                         <span
                           className={`text-[9px] px-1.5 py-0.2 rounded border font-bold ${getPriorityBadge(
                             issue.priority
@@ -327,13 +457,13 @@ export function JiraBoardSimulator() {
         })}
       </div>
 
-      {/* Lower Inspection Deck: Selected Issue Details + Live ADO.NET SQL Dispatch */}
+      {/* Lower Inspection Deck: Selected Issue Details + Live Stored Procedure / Cache Inspector */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        {/* Left: Issue Meta */}
+        {/* Left: Issue Meta & Editorial Notes */}
         <div className="lg:col-span-5 bg-[#060e22] border border-slate-800 p-4 rounded-lg space-y-2.5">
           <div className="flex items-center justify-between border-b border-slate-800 pb-2">
             <span className="text-[10px] text-[#ffea00] font-bold uppercase tracking-wider">
-              Selected Issue Inspector
+              Editorial Ledger Item
             </span>
             <span className="text-xs text-[#00d2ff] font-bold">{selectedIssue.key}</span>
           </div>
@@ -353,7 +483,7 @@ export function JiraBoardSimulator() {
               <span className="text-[#ffea00] font-bold">{selectedIssue.priority}</span>
             </div>
             <div>
-              <span className="text-slate-500">Assignee: </span>
+              <span className="text-slate-500">Assigned: </span>
               <span className="text-slate-300">{selectedIssue.assignee}</span>
             </div>
             <div>
@@ -363,46 +493,68 @@ export function JiraBoardSimulator() {
           </div>
         </div>
 
-        {/* Right: Pure ADO.NET Parameterized SQL Dispatch Terminal */}
+        {/* Right: Pure ADO.NET & Stored Procedure Execution Terminal */}
         <div className="lg:col-span-7 bg-[#02050e] border-2 border-[#10b981]/50 p-4 rounded-lg space-y-2">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-            <div className="flex items-center gap-2">
-              <Database className="w-3.5 h-3.5 text-[#10b981]" />
-              <span className="text-[11px] text-[#10b981] font-bold">
-                Pure ADO.NET SQL Command Dispatcher (Zero-ORM)
-              </span>
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+            {/* Stored Proc Tabs */}
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => {
+                  sound.playHover();
+                  setActiveProcTab("board");
+                }}
+                className={`px-2 py-0.5 text-[10px] font-bold rounded transition-colors ${
+                  activeProcTab === "board"
+                    ? "bg-[#10b981] text-[#030712]"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                sp_GetBoardData
+              </button>
+              <button
+                onClick={() => {
+                  sound.playHover();
+                  setActiveProcTab("sprint");
+                }}
+                className={`px-2 py-0.5 text-[10px] font-bold rounded transition-colors ${
+                  activeProcTab === "sprint"
+                    ? "bg-[#10b981] text-[#030712]"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                sp_GetSprintSummary
+              </button>
+              <button
+                onClick={() => {
+                  sound.playHover();
+                  setActiveProcTab("dashboard");
+                }}
+                className={`px-2 py-0.5 text-[10px] font-bold rounded transition-colors ${
+                  activeProcTab === "dashboard"
+                    ? "bg-[#10b981] text-[#030712]"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                IMemoryCache (1ms)
+              </button>
             </div>
-            <span className="text-[10px] text-slate-400 font-bold">
-              Latency: {lastExecutedSql.executionTimeMs}ms
+
+            <span className="text-[10px] text-[#10b981] font-bold">
+              ● Stored Proc Latency: ~5ms
             </span>
           </div>
 
           {/* Code block */}
-          <pre className="text-[10.5px] font-mono text-slate-300 bg-[#060c1c] p-2.5 rounded border border-slate-800 overflow-x-auto whitespace-pre-wrap leading-relaxed">
-            <code>{`// C# Backend: IssueRepository.cs (Pure ADO.NET)
-using var connection = new SqlConnection(_connectionString);
-await connection.OpenAsync();
-using var transaction = connection.BeginTransaction();
-
-using var cmd = new SqlCommand(
-    @"${lastExecutedSql.query.replace(/\n/g, "\n      ")}",
-    connection, transaction);
-
-// Strict Parameter Binding (Anti-SQLi)
-cmd.Parameters.Add("@IssueId", SqlDbType.NVarChar, 50).Value = "${selectedIssue.id}";
-cmd.Parameters.Add("@Status", SqlDbType.NVarChar, 30).Value = "${selectedIssue.status}";
-cmd.Parameters.Add("@UserId", SqlDbType.NVarChar, 50).Value = "USR-401";
-
-await cmd.ExecuteNonQueryAsync();
-await transaction.CommitAsync();`}</code>
+          <pre className="text-[10.5px] font-mono text-slate-300 bg-[#060c1c] p-2.5 rounded border border-slate-800 overflow-x-auto whitespace-pre-wrap leading-relaxed max-h-44">
+            <code>{getProcCode()}</code>
           </pre>
 
-          <div className="flex items-center justify-between text-[10px] pt-1 text-slate-400">
+          <div className="flex flex-wrap items-center justify-between text-[10px] pt-1 text-slate-400 gap-1">
             <span className="text-[#10b981] font-bold">
-              ✔ {lastExecutedSql.transactionStatus}
+              ✔ {lastExecutedSql.cacheStatus}
             </span>
             <span className="text-slate-500">
-              Direct SqlClient &bull; Strict Parameterization
+              Connection Pool: Min=5, Max=100 &bull; net10.0
             </span>
           </div>
         </div>
