@@ -42,18 +42,12 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-<<<<<<< HEAD
   async headers() {
     return [
       {
-        source: "/:path*",
-        headers: securityHeaders,
-      },
-    ];
-  },
-=======
-  /* config options here */
->>>>>>> 39d6f7d330c0639e289c08d577b00fed9f81d856
+
+/* config options here */
+
 };
 
 export default nextConfig;
