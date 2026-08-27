@@ -1,0 +1,16 @@
+.npmrc
+  h_a7a39243946b44 1-2
+package.json
+  h_a7a39243946b44 13-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "5eb08c95e36615d4c6fdeb3dbafca241ea12310b",
+  "prompts": {},
+  "humans": {
+    "h_a7a39243946b44": {
+      "author": "Rushil <rushilchilakamarri@gmail.com>"
+    }
+  }
+}
