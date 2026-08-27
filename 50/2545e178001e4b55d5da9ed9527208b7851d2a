@@ -1,0 +1,17 @@
+next.config.ts
+  h_a7a39243946b44 54
+  h_a7a39243946b44 45,55-56
+components/p3/p3-contact.tsx
+  h_a7a39243946b44 54,56-58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "502545e178001e4b55d5da9ed9527208b7851d2a",
+  "prompts": {},
+  "humans": {
+    "h_a7a39243946b44": {
+      "author": "Rushil <rushilchilakamarri@gmail.com>"
+    }
+  }
+}
