@@ -13,6 +13,7 @@ import { MailsenseSimulator } from "../interactive-demos/mailsense-simulator";
 import { MvvmDiagram } from "../interactive-demos/mvvm-diagram";
 import { CarRentalSimulator } from "../interactive-demos/car-rental-simulator";
 import { PomodoroSimulator } from "../interactive-demos/pomodoro-simulator";
+import { JiraBoardSimulator } from "../interactive-demos/jira-board-simulator";
 
 interface P3ModalProps {
   project: Project | null;
@@ -51,6 +52,8 @@ export function P3Modal({ project, onClose }: P3ModalProps) {
         return <CarRentalSimulator />;
       case "pomodoro":
         return <PomodoroSimulator />;
+      case "jira-board":
+        return <JiraBoardSimulator />;
       default:
         return null;
     }

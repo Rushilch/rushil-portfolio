@@ -19,7 +19,7 @@ export function P3Hero({ onNavigate }: P3HeroProps) {
       sub: "VaaniVerse (<200ms) · SmartInbox · EcoVision · School Portal · Java & Python Systems",
       target: "projects",
       color: "border-[#00d2ff] bg-[#00d2ff]/10 hover:bg-[#00d2ff] hover:text-[#030712]",
-      tag: "8 Systems",
+      tag: "9 Systems",
     },
     {
       index: "02",

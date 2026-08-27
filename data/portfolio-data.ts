@@ -556,6 +556,72 @@ export const PROJECTS: Project[] = [
     ],
     interactiveType: "pomodoro",
   },
+  {
+    id: "jira-tracker",
+    title: "Jira-Inspired Issue & Project Tracker",
+    tagline: "Full-Stack Angular 18+ SPA & ASP.NET Core Web API with Pure Hand-Written ADO.NET",
+    category: "backend-systems",
+    categoryLabel: "Full-Stack & Backend Systems",
+    status: "Completed",
+    featured: true,
+    githubUrl: "https://github.com/Rushilch/Jira",
+    role: "Full-Stack Systems Engineer",
+    problemStatement:
+      "Most web CRUD projects rely heavily on high-level ORMs (like Entity Framework Core) that abstract away database mechanics, query generation, connection lifetimes, and transaction boundaries. I engineered this multi-user issue and project management application deliberately using hand-crafted ADO.NET and direct SQL Server stored procedures without any ORM abstraction, paired with a reactive Angular 18+ standalone SPA.",
+    keyChallenge:
+      "Managing raw SqlClient connection pooling, strict parameterized SqlCommands to prevent SQL injection, multi-result set SqlDataReader parsing, and atomic SqlTransaction boundaries across multi-table operations (Projects, Sprints, Issues, Comments, Audit Logs) while orchestrating optimistic UI drag-and-drop state in Angular with automated rollback on API failure.",
+    solutionArchitecture:
+      "I architected a 3-tier enterprise application. The frontend is an Angular 18+ standalone SPA utilizing RxJS signals, Angular CDK drag-and-drop Kanban boards, and JWT HTTP interceptors. The backend is an ASP.NET Core 8 Web API with RFC 7807 ProblemDetails error handling, clean Repository & Service layers, and direct ADO.NET data access executing parameterized T-SQL against Microsoft SQL Server with database-level constraints and composite indexes.",
+    pipelineSteps: [
+      {
+        step: "01",
+        title: "Angular 18+ Reactive SPA",
+        tech: "Angular Standalone + CDK",
+        description: "Kanban board with optimistic drag-and-drop, RxJS state management, and JWT bearer authentication.",
+      },
+      {
+        step: "02",
+        title: "ASP.NET Core Web API",
+        tech: "C# Controllers & Middleware",
+        description: "Centralized RFC 7807 error middleware, DTO validation, and clean RESTful route dispatching.",
+      },
+      {
+        step: "03",
+        title: "Repository & Service Layer",
+        tech: "Clean Architecture Interfaces",
+        description: "Business rule validation, issue status state machine, and activity audit recording.",
+      },
+      {
+        step: "04",
+        title: "Pure ADO.NET Data Layer",
+        tech: "Microsoft.Data.SqlClient",
+        description: "Direct SqlConnection, SqlTransaction boundaries, parameterized queries, and SQL Server stored procedures.",
+      },
+    ],
+    techStack: [
+      "C# / ASP.NET Core 8",
+      "ADO.NET (Pure Data Access)",
+      "Microsoft SQL Server",
+      "Angular 18+ Standalone",
+      "TypeScript & RxJS",
+      "Angular CDK Drag & Drop",
+      "JWT Authentication",
+      "Stored Procedures & T-SQL",
+    ],
+    metrics: [
+      { label: "Data Access", value: "Pure ADO.NET", detail: "Zero ORM abstraction / direct SQL" },
+      { label: "Frontend", value: "Angular 18+", detail: "Standalone components & CDK DnD" },
+      { label: "Backend", value: "ASP.NET Core 8", detail: "Repository pattern & Web API" },
+      { label: "Database", value: "SQL Server", detail: "Transactions & Stored Procedures" },
+    ],
+    highlights: [
+      "I architected a full-stack multi-user project tracker using pure ADO.NET to demonstrate deep control over database connections, transactions, and raw T-SQL optimization.",
+      "I built an interactive Kanban board in Angular 18+ with CDK drag-and-drop, optimistic UI updates, and error rollback.",
+      "I designed a relational SQL Server database schema with Foreign Keys, Cascades, Indexes, and parameterized queries guarding against SQL injection.",
+      "I implemented JWT authentication, HTTP interceptors, route guards, and RFC 7807 ProblemDetails middleware.",
+    ],
+    interactiveType: "jira-board",
+  },
 ];
 
 export const SKILLS: SkillItem[] = [
@@ -570,8 +636,8 @@ export const SKILLS: SkillItem[] = [
     name: "C# / .NET",
     category: "Languages",
     level: "Proficient",
-    description: "Strong object-oriented fundamentals, LINQ, ASP.NET Core Web APIs (School Portal), and WPF desktop software engineering (Todo App).",
-    projects: ["school-portal", "wpf-todo"],
+    description: "Strong object-oriented fundamentals, LINQ, ASP.NET Core Web APIs (Jira Tracker, School Portal), and WPF desktop software engineering (Todo App).",
+    projects: ["jira-tracker", "school-portal", "wpf-todo"],
   },
   {
     name: "Java",
@@ -584,15 +650,15 @@ export const SKILLS: SkillItem[] = [
     name: "SQL & Databases",
     category: "Languages",
     level: "Proficient",
-    description: "Relational database design, raw SQLite queries (SmartInbox), and MS SQL Server schemas via Entity Framework Core.",
-    projects: ["smartinbox", "school-portal"],
+    description: "Relational database design, raw SQLite queries (SmartInbox), and MS SQL Server schemas with direct ADO.NET and EF Core.",
+    projects: ["jira-tracker", "smartinbox", "school-portal"],
   },
   {
     name: "TypeScript / JavaScript",
     category: "Languages",
     level: "Proficient",
-    description: "Modern ES6+, Next.js React frontend development, Web Audio API synthesis, and DOM manipulation.",
-    projects: [],
+    description: "Modern ES6+, Angular 18+ standalone frontend development, Next.js React, RxJS reactive programming, and Web Audio API synthesis.",
+    projects: ["jira-tracker"],
   },
   {
     name: "MediaPipe",
@@ -639,9 +705,23 @@ export const SKILLS: SkillItem[] = [
   {
     name: "ASP.NET Core Web API",
     category: "Backend & Systems",
-    level: "Actively Deepening",
-    description: "RESTful controller architecture, dependency injection, middleware configuration, and Swagger documentation.",
-    projects: ["school-portal"],
+    level: "Proficient",
+    description: "RESTful controller architecture, dependency injection, RFC 7807 error handling, and clean repository service design.",
+    projects: ["jira-tracker", "school-portal"],
+  },
+  {
+    name: "ADO.NET & Direct SQL",
+    category: "Backend & Systems",
+    level: "Proficient",
+    description: "Direct SqlClient connection pooling, atomic SqlTransaction boundaries, strict parameterized queries (anti-SQLi), and stored procedures.",
+    projects: ["jira-tracker"],
+  },
+  {
+    name: "Angular 18+ & RxJS",
+    category: "Backend & Systems",
+    level: "Proficient",
+    description: "Standalone components, Angular CDK drag-and-drop Kanban, reactive RxJS state management, and JWT HTTP interceptors.",
+    projects: ["jira-tracker"],
   },
   {
     name: "Entity Framework Core",
@@ -669,7 +749,7 @@ export const SKILLS: SkillItem[] = [
     category: "Desktop & Tools",
     level: "Proficient",
     description: "Version control workflows, branch management, issue tracking, and repository documentation.",
-    projects: ["vaaniverse", "smartinbox", "ecovision", "school-portal", "exam-proctoring", "wpf-todo", "car-rental", "pomodoro"],
+    projects: ["jira-tracker", "vaaniverse", "smartinbox", "ecovision", "school-portal", "exam-proctoring", "wpf-todo", "car-rental", "pomodoro"],
   },
   {
     name: "Linux & CLI",

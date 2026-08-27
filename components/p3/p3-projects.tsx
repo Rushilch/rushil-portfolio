@@ -42,6 +42,7 @@ export function P3Projects({ onSelectProject }: P3ProjectsProps) {
     switch (id) {
       case "vaaniverse":
       case "smartinbox":
+      case "jira-tracker":
         return { label: "Featured", color: "bg-[#00d2ff] text-[#030712]" };
       case "ecovision":
       case "school-portal":

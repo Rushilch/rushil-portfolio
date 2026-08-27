@@ -31,7 +31,7 @@ export interface Project {
   techStack: string[];
   highlights: string[];
   metrics?: ProjectMetric[];
-  interactiveType: "pipeline" | "shap" | "topology" | "cv-proctor" | "mvvm" | "llm-triage" | "car-rental" | "pomodoro";
+  interactiveType: "pipeline" | "shap" | "topology" | "cv-proctor" | "mvvm" | "llm-triage" | "car-rental" | "pomodoro" | "jira-board";
 }
 
 export interface SkillItem {

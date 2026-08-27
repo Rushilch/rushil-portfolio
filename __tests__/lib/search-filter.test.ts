@@ -26,6 +26,12 @@ describe("Project Search Filtering Engine", () => {
   it("filters by tagline or domain descriptors", () => {
     const signLanguageResults = filterProjects(PROJECTS, "sign language");
     expect(signLanguageResults.some((p) => p.id === "vaaniverse")).toBe(true);
+
+    const jiraResults = filterProjects(PROJECTS, "ado.net");
+    expect(jiraResults.some((p) => p.id === "jira-tracker")).toBe(true);
+
+    const angularResults = filterProjects(PROJECTS, "angular");
+    expect(angularResults.some((p) => p.id === "jira-tracker")).toBe(true);
   });
 
   it("returns empty array for unmatched random query", () => {
