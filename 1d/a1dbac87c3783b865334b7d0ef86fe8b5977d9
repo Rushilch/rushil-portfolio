@@ -1,0 +1,14 @@
+next.config.ts
+  h_a7a39243946b44 52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "1da1dbac87c3783b865334b7d0ef86fe8b5977d9",
+  "prompts": {},
+  "humans": {
+    "h_a7a39243946b44": {
+      "author": "Rushil <rushilchilakamarri@gmail.com>"
+    }
+  }
+}
