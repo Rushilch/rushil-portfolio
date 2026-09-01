@@ -1,0 +1,30 @@
+next.config.ts
+  h_a7a39243946b44 45
+README.md
+  h_a7a39243946b44 368,372
+__tests__/lib/jira-logic.test.ts
+  h_a7a39243946b44 1-90
+__tests__/lib/rbac-logic.test.ts
+  h_a7a39243946b44 2,4-11,13-23,26-44,47-66,69-77
+components/p3/p3-broadcast-showcase.tsx
+  h_a7a39243946b44 1-303
+components/p3/p3-hero.tsx
+  h_a7a39243946b44 7,198-199
+data/portfolio-data.ts
+  h_a7a39243946b44 173-243
+lib/jira-logic.ts
+  h_a7a39243946b44 1-87
+lib/rbac-logic.ts
+  h_a7a39243946b44 9-15,24-27,31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "cfb752a02ad21be6b1e6efe635c18ac408f99003",
+  "prompts": {},
+  "humans": {
+    "h_a7a39243946b44": {
+      "author": "Rushil <rushilchilakamarri@gmail.com>"
+    }
+  }
+}
