@@ -365,11 +365,11 @@ Each project focuses on demonstrating practical implementation rather than simpl
 
 **Rushil Chilakamarri**
 
-📧 Email: *[your-email@example.com](mailto:your-email@example.com)*
+📧 Email: *[rushilchilakamarri@gmail.com](mailto:rushilchilakamarri@gmail.com)*
 
 🐙 GitHub: [Rushilch](https://github.com/Rushilch)
 
-💼 LinkedIn: *your LinkedIn URL*
+💼 LinkedIn: *https://www.linkedin.com/in/rushil-chilakamarri/*
 
 ---
 

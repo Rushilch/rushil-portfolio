@@ -42,6 +42,7 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  basePath: "/portfolio",
   async headers() {
     return [
       {

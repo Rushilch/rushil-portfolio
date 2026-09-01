@@ -4,7 +4,7 @@ import React from "react";
 import { ChevronRight, Terminal } from "lucide-react";
 import { PERSONAL_INFO } from "@/data/portfolio-data";
 import { sound } from "@/lib/sound";
-import { VaaniversePipeline } from "../interactive-demos/vaaniverse-pipeline";
+import { P3BroadcastShowcase } from "./p3-broadcast-showcase";
 
 interface P3HeroProps {
   onOpenResume: () => void;
@@ -195,22 +195,8 @@ export function P3Hero({ onNavigate }: P3HeroProps) {
           </div>
         </div>
 
-        {/* Hero Interactive Feature: Live VaaniVerse Pipeline Simulator */}
-        <div className="max-w-5xl mx-auto">
-          <div className="flex items-center justify-between mb-3 px-1">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 bg-[#00d2ff] animate-ping rounded-full" />
-              <h2 className="text-xs font-mono tracking-wide text-[#00d2ff] font-bold">
-                [Live Demo] &bull; VaaniVerse Sub-200ms ISL Pipeline
-              </h2>
-            </div>
-            <span className="text-[11px] font-mono text-slate-400 hidden sm:inline">
-              MediaPipe 21 Landmark Vectorization &bull; Real-time Gestures
-            </span>
-          </div>
-
-          <VaaniversePipeline />
-        </div>
+        {/* Hero Interactive Broadcast Deck: TV Commercial Style Channel Switcher */}
+        <P3BroadcastShowcase />
       </div>
     </section>
   );

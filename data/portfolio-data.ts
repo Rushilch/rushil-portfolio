@@ -170,6 +170,77 @@ export const PROJECTS: Project[] = [
     ],
     interactiveType: "llm-triage",
   },
+
+  {
+    id: "jira-tracker",
+    title: "JiraClone (Editorial Journal & Kanban Platform)",
+    tagline: "Enterprise .NET 10 Web API & Angular 19 Standalone SPA with Pure ADO.NET and Bespoke Editorial Ledger UI",
+    category: "backend-systems",
+    categoryLabel: "Enterprise Backend & Angular 19 SPA",
+    status: "Completed",
+    featured: true,
+    githubUrl: "https://github.com/Rushilch/Jira",
+    role: "Full-Stack Systems Architect",
+    problemStatement:
+      "Designed as an enterprise-grade digital work ledger and agile project management platform. Most modern full-stack web applications rely on heavy ORMs (like EF Core) that hide query execution plans, connection lifecycles, and transaction boundaries. I built JiraClone from scratch using pure ADO.NET and direct SQL Server stored procedures paired with an Angular 19 standalone frontend styled with a bespoke tactile Editorial Paper/Notebook aesthetic.",
+    keyChallenge:
+      "Achieving sub-millisecond data delivery and rock-solid relational integrity without ORM overhead. This required managing raw SqlClient connection pooling (5–100 pool size), atomic multi-table SqlTransaction boundaries, single-roundtrip multi-result set stored procedures (sp_GetBoardData, sp_GetDashboardStats), in-memory sliding caching with write-through invalidation, and optimistic drag-and-drop state transitions with automatic rollback in Angular 19.",
+    solutionArchitecture:
+      "I engineered a 4-tier Clean Architecture system. The backend (ASP.NET Core 10) uses pure ADO.NET with strict parameterized SqlCommands, custom JWT claim authentication, auto-migrating DbInitializer, and an IMemoryCache layer providing ~1ms cache hits and ~5ms direct SQL execution. The frontend (Angular 19) is built with 100% Standalone Components, Signal-based reactivity, Angular CDK drag-and-drop, and a bespoke Editorial Paper design system (dot-grid canvas, stamp badges, and ink-well loading feedback).",
+    pipelineSteps: [
+      {
+        step: "01",
+        title: "Angular 19 Signal & CDK Layer",
+        tech: "Angular 19 Standalone + Signals",
+        description: "CDK drag-and-drop Kanban, multi-sprint backlogs, and ink-well reactive loading state.",
+      },
+      {
+        step: "02",
+        title: "ASP.NET Core 10 Web API",
+        tech: "C# 13 & net10.0 Controllers",
+        description: "JWT Bearer authentication with custom claims, RFC 7807 problem details, and route guards.",
+      },
+      {
+        step: "03",
+        title: "Service & In-Memory Cache",
+        tech: "IMemoryCache + Sliding Expiration",
+        description: "Write-through cache invalidation on mutable actions delivering ~1ms cached response times.",
+      },
+      {
+        step: "04",
+        title: "Pure ADO.NET & SQL Server",
+        tech: "Microsoft.Data.SqlClient & Stored Procs",
+        description: "Multi-result set stored procedures (sp_GetBoardData, sp_GetSprintSummary), connection pooling (5–100), and atomic transactions.",
+      },
+    ],
+    techStack: [
+      "ASP.NET Core 10 (.NET 10)",
+      "Pure ADO.NET (SqlClient)",
+      "Microsoft SQL Server",
+      "Angular 19 Standalone",
+      "Signal-Based Reactivity",
+      "Angular CDK Drag & Drop",
+      "IMemoryCache (1ms Delivery)",
+      "JWT Bearer & Claims Auth",
+      "Stored Procedures & T-SQL",
+      "xUnit & Moq Testing",
+    ],
+    metrics: [
+      { label: "Data Access", value: "Pure ADO.NET", detail: "Zero ORM overhead / raw SqlClient" },
+      { label: "Stored Proc Latency", value: "~5ms", detail: "sp_GetBoardData multi-result retrieval" },
+      { label: "Cache Response", value: "~1ms", detail: "Sliding IMemoryCache hit time" },
+      { label: "Frontend", value: "Angular 19", detail: "100% Standalone & Signals" },
+    ],
+    highlights: [
+      "I engineered a full-stack digital work ledger using ASP.NET Core 10 and pure ADO.NET, achieving ~5ms stored procedure execution and ~1ms cached response times.",
+      "I developed an Angular 19 Standalone SPA with Signal-based reactivity, Angular CDK drag-and-drop Kanban board, and multi-sprint backlog planning.",
+      "I crafted a bespoke Editorial Paper design system featuring dot-grid canvas, leather charcoal / parchment palettes, rubber stamp badges, and ink-well loading indicators.",
+      "I designed multi-result set SQL Server stored procedures (sp_GetBoardData, sp_GetDashboardStats) returning project metadata, active sprint, and grouped issues in a single database roundtrip.",
+      "I implemented sliding IMemoryCache with write-through invalidation, auto-migrating DbInitializer, and an xUnit + Moq unit test suite.",
+    ],
+    interactiveType: "jira-board",
+  },
+
   {
     id: "ecovision",
     title: "EcoVision",
@@ -555,75 +626,6 @@ export const PROJECTS: Project[] = [
       "I designed a clean graphical interface with customizable work, short break, and long break durations.",
     ],
     interactiveType: "pomodoro",
-  },
-  {
-    id: "jira-tracker",
-    title: "JiraClone (Editorial Journal & Kanban Platform)",
-    tagline: "Enterprise .NET 10 Web API & Angular 19 Standalone SPA with Pure ADO.NET and Bespoke Editorial Ledger UI",
-    category: "backend-systems",
-    categoryLabel: "Enterprise Backend & Angular 19 SPA",
-    status: "Completed",
-    featured: true,
-    githubUrl: "https://github.com/Rushilch/Jira",
-    role: "Full-Stack Systems Architect",
-    problemStatement:
-      "Designed as an enterprise-grade digital work ledger and agile project management platform. Most modern full-stack web applications rely on heavy ORMs (like EF Core) that hide query execution plans, connection lifecycles, and transaction boundaries. I built JiraClone from scratch using pure ADO.NET and direct SQL Server stored procedures paired with an Angular 19 standalone frontend styled with a bespoke tactile Editorial Paper/Notebook aesthetic.",
-    keyChallenge:
-      "Achieving sub-millisecond data delivery and rock-solid relational integrity without ORM overhead. This required managing raw SqlClient connection pooling (5–100 pool size), atomic multi-table SqlTransaction boundaries, single-roundtrip multi-result set stored procedures (sp_GetBoardData, sp_GetDashboardStats), in-memory sliding caching with write-through invalidation, and optimistic drag-and-drop state transitions with automatic rollback in Angular 19.",
-    solutionArchitecture:
-      "I engineered a 4-tier Clean Architecture system. The backend (ASP.NET Core 10) uses pure ADO.NET with strict parameterized SqlCommands, custom JWT claim authentication, auto-migrating DbInitializer, and an IMemoryCache layer providing ~1ms cache hits and ~5ms direct SQL execution. The frontend (Angular 19) is built with 100% Standalone Components, Signal-based reactivity, Angular CDK drag-and-drop, and a bespoke Editorial Paper design system (dot-grid canvas, stamp badges, and ink-well loading feedback).",
-    pipelineSteps: [
-      {
-        step: "01",
-        title: "Angular 19 Signal & CDK Layer",
-        tech: "Angular 19 Standalone + Signals",
-        description: "CDK drag-and-drop Kanban, multi-sprint backlogs, and ink-well reactive loading state.",
-      },
-      {
-        step: "02",
-        title: "ASP.NET Core 10 Web API",
-        tech: "C# 13 & net10.0 Controllers",
-        description: "JWT Bearer authentication with custom claims, RFC 7807 problem details, and route guards.",
-      },
-      {
-        step: "03",
-        title: "Service & In-Memory Cache",
-        tech: "IMemoryCache + Sliding Expiration",
-        description: "Write-through cache invalidation on mutable actions delivering ~1ms cached response times.",
-      },
-      {
-        step: "04",
-        title: "Pure ADO.NET & SQL Server",
-        tech: "Microsoft.Data.SqlClient & Stored Procs",
-        description: "Multi-result set stored procedures (sp_GetBoardData, sp_GetSprintSummary), connection pooling (5–100), and atomic transactions.",
-      },
-    ],
-    techStack: [
-      "ASP.NET Core 10 (.NET 10)",
-      "Pure ADO.NET (SqlClient)",
-      "Microsoft SQL Server",
-      "Angular 19 Standalone",
-      "Signal-Based Reactivity",
-      "Angular CDK Drag & Drop",
-      "IMemoryCache (1ms Delivery)",
-      "JWT Bearer & Claims Auth",
-      "Stored Procedures & T-SQL",
-      "xUnit & Moq Testing",
-    ],
-    metrics: [
-      { label: "Data Access", value: "Pure ADO.NET", detail: "Zero ORM overhead / raw SqlClient" },
-      { label: "Stored Proc Latency", value: "~5ms", detail: "sp_GetBoardData multi-result retrieval" },
-      { label: "Cache Response", value: "~1ms", detail: "Sliding IMemoryCache hit time" },
-      { label: "Frontend", value: "Angular 19", detail: "100% Standalone & Signals" },
-    ],
-    highlights: [
-      "I engineered a full-stack digital work ledger using ASP.NET Core 10 and pure ADO.NET, achieving ~5ms stored procedure execution and ~1ms cached response times.",
-      "I developed an Angular 19 Standalone SPA with Signal-based reactivity, Angular CDK drag-and-drop Kanban board, and multi-sprint backlog planning.",
-      "I crafted a bespoke Editorial Paper design system featuring dot-grid canvas, leather charcoal / parchment palettes, rubber stamp badges, and ink-well loading indicators.",
-      "I designed multi-result set SQL Server stored procedures (sp_GetBoardData, sp_GetDashboardStats) returning project metadata, active sprint, and grouped issues in a single database roundtrip.",
-      "I implemented sliding IMemoryCache with write-through invalidation, auto-migrating DbInitializer, and an xUnit + Moq unit test suite.",
-    ],
-    interactiveType: "jira-board",
   },
 ];
 
